@@ -16,7 +16,7 @@ class DashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: Text('Expense Tracker'),
         backgroundColor: Colors.grey[800],
       ),
       body: Column(
