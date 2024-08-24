@@ -62,7 +62,8 @@ class DBService extends ChangeNotifier {
   Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
       // Add the new column if the old version is less than 2
-      await db.execute('ALTER TABLE entries ADD COLUMN isIncome INTEGER DEFAULT 0');
+      await db
+          .execute('ALTER TABLE entries ADD COLUMN isIncome INTEGER DEFAULT 0');
     }
   }
 
@@ -114,6 +115,7 @@ class DBService extends ChangeNotifier {
       'entries',
       where: 'userId = ?',
       whereArgs: [userId],
+      orderBy: 'date ASC'
     );
 
     return result.map((json) => Entry.fromMap(json)).toList();
@@ -128,5 +130,19 @@ class DBService extends ChangeNotifier {
       whereArgs: [id],
     );
     notifyListeners(); // Notify listeners of changes
+  }
+
+  // Method to retrieve entries for statistics
+  Future<List<Entry>> getEntriesForStatistics(int userId) async {
+    final db = await database;
+
+    final result = await db.query(
+      'entries',
+      where: 'userId = ?',
+      whereArgs: [userId],
+      orderBy: 'date DESC', // Order by date descending
+    );
+
+    return result.map((json) => Entry.fromMap(json)).toList();
   }
 }

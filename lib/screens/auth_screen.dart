@@ -7,6 +7,8 @@ import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
 class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
+
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
@@ -32,14 +34,14 @@ class _AuthScreenState extends State<AuthScreen> {
           children: <Widget>[
             TextField(
               controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              decoration: const InputDecoration(labelText: 'Username'),
             ),
             TextField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 final hashedPassword = hashPassword(_passwordController.text);
@@ -83,10 +85,10 @@ class _AuthScreenState extends State<AuthScreen> {
               },
               child: Text(_isLogin ? 'Login' : 'Register'),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               _errorMessage,
-              style: TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.red),
             ),
             TextButton(
               onPressed: () {

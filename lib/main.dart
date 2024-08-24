@@ -6,10 +6,12 @@ import 'services/db_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -22,9 +24,8 @@ class MyApp extends StatelessWidget {
         title: 'Expense Tracker',
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: Colors.grey[800],
         ),
-        home: AuthScreen(),
+        home: const AuthScreen(),
       ),
     );
   }

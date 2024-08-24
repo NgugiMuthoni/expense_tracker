@@ -1,94 +1,88 @@
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'package:charts_flutter/flutter.dart' as charts;
-// import '../services/db_service.dart';
-// import '../models/entry_models.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+import '../services/db_service.dart';
+import '../models/entry_models.dart';
 
-// class StatisticsScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final dbService = Provider.of<DBService>(context);
-//     final int userId = 1; // Default userId for testing
+class StatisticsScreen extends StatelessWidget {
+  const StatisticsScreen({super.key});
 
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Statistics'),
-//       ),
-//       body: FutureBuilder<List<Entry>>(
-//         future: dbService.getEntriesForStatistics(userId),
-//         builder: (context, snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return Center(child: CircularProgressIndicator());
-//           } else if (snapshot.hasError) {
-//             return Center(child: Text('Error: ${snapshot.error}'));
-//           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-//             return Center(child: Text('No data available.'));
-//           }
+  @override
+  Widget build(BuildContext context) {
+    final dbService = Provider.of<DBService>(context);
+    const int userId = 1; // Default userId for testing
 
-//           final entries = snapshot.data!;
-//           final data = _createChartData(entries);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Statistics'),
+      ),
+      body: FutureBuilder<List<Entry>>(
+        future: dbService.getEntriesForStatistics(userId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No data available.'));
+          }
 
-//           return Padding(
-//             padding: EdgeInsets.all(16.0),
-//             child: charts.BarChart(
-//               data,
-//               animate: true,
-//               vertical: false,
-//               domainAxis: charts.OrdinalAxisSpec(),
-//               primaryMeasureAxis: charts.NumericAxisSpec(
-//                 tickProviderSpec: charts.BasicNumericTickProviderSpec(
-//                   zeroBound: false,
-//                 ),
-//                 renderSpec: charts.GridlineRendererSpec(
-//                   labelStyle: charts.TextStyleSpec(
-//                     fontSize: 14,
-//                     color: charts.MaterialPalette.black,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
+          final entries = snapshot.data!;
+          final data = _createChartData(entries);
 
-//   List<charts.Series<ChartData, String>> _createChartData(List<Entry> entries) {
-//     final incomeData = entries
-//         .where((entry) => entry.isIncome)
-//         .take(14)
-//         .toList();
-//     final expenseData = entries
-//         .where((entry) => !entry.isIncome)
-//         .take(14)
-//         .toList();
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: charts.BarChart(
+              data,
+              animate: true,
+              vertical: true,
+              domainAxis: const charts.OrdinalAxisSpec(),
+              primaryMeasureAxis: const charts.NumericAxisSpec(
+                tickProviderSpec: charts.BasicNumericTickProviderSpec(
+                  zeroBound: false,
+                ),
+                renderSpec: charts.GridlineRendererSpec(
+                  labelStyle: charts.TextStyleSpec(
+                    fontSize: 14,
+                    color: charts.MaterialPalette.black,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
-//     final incomeSeries = incomeData.map((entry) => ChartData(entry.date, entry.amount, Colors.green)).toList();
-//     final expenseSeries = expenseData.map((entry) => ChartData(entry.date, entry.amount, Colors.red)).toList();
+  List<charts.Series<ChartData, String>> _createChartData(List<Entry> entries) {
+    // Convert entries to ChartData
+    final combinedEntries = entries
+        .map((entry) => ChartData(entry.id.toString(), entry.amount,
+            entry.isIncome ? Colors.green : Colors.red))
+        .toList();
 
-//     return [
-//       charts.Series<ChartData, String>(
-//         id: 'Income',
-//         colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.green),
-//         domainFn: (ChartData data, _) => data.date,
-//         measureFn: (ChartData data, _) => data.amount,
-//         data: incomeSeries,
-//       ),
-//       charts.Series<ChartData, String>(
-//         id: 'Expenses',
-//         colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.red),
-//         domainFn: (ChartData data, _) => data.date,
-//         measureFn: (ChartData data, _) => data.amount,
-//         data: expenseSeries,
-//       ),
-//     ];
-//   }
-// }
+    // Sort entries by the order they were added (assumed to be by 'id')
+    combinedEntries.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
 
-// class ChartData {
-//   final String date;
-//   final double amount;
-//   final Color color;
+    return [
+      charts.Series<ChartData, String>(
+        id: 'Income & Expenses',
+        colorFn: (ChartData data, _) =>
+            charts.ColorUtil.fromDartColor(data.color),
+        domainFn: (ChartData data, _) =>
+            data.id, // Use the ID or another unique identifier
+        measureFn: (ChartData data, _) => data.amount,
+        data: combinedEntries,
+      ),
+    ];
+  }
+}
 
-//   ChartData(this.date, this.amount, this.color);
-// }
+class ChartData {
+  final String id; // Use the ID or another unique identifier
+  final double amount;
+  final Color color;
+
+  ChartData(this.id, this.amount, this.color);
+}
