@@ -53,7 +53,7 @@ class DBService extends ChangeNotifier {
       amount REAL,
       date TEXT,
       userId INTEGER,
-      isIncome INTEGER DEFAULT 0,  // New column to store if entry is income or expense
+      isIncome INTEGER DEFAULT 0,  -- New column to store if entry is income or expense
       FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE
     )
     ''');
@@ -111,12 +111,8 @@ class DBService extends ChangeNotifier {
   Future<List<Entry>> getEntries(int userId) async {
     final db = await database;
 
-    final result = await db.query(
-      'entries',
-      where: 'userId = ?',
-      whereArgs: [userId],
-      orderBy: 'date ASC'
-    );
+    final result = await db.query('entries',
+        where: 'userId = ?', whereArgs: [userId], orderBy: 'date ASC');
 
     return result.map((json) => Entry.fromMap(json)).toList();
   }
