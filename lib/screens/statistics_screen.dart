@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 import '../services/db_service.dart';
 import '../models/entry_models.dart';
 
@@ -32,21 +32,32 @@ class StatisticsScreen extends StatelessWidget {
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: charts.BarChart(
-              data,
-              animate: true,
-              vertical: true,
-              domainAxis: const charts.OrdinalAxisSpec(),
-              primaryMeasureAxis: const charts.NumericAxisSpec(
-                tickProviderSpec: charts.BasicNumericTickProviderSpec(
-                  zeroBound: false,
-                ),
-                renderSpec: charts.GridlineRendererSpec(
-                  labelStyle: charts.TextStyleSpec(
-                    fontSize: 14,
-                    color: charts.MaterialPalette.black,
+            child: BarChart(
+              BarChartData(
+                barGroups: data,
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        final index = value.toInt();
+                        return Text(
+                          index >= entries.length ? '' : entries[index].date,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.black,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: true),
                   ),
                 ),
+                gridData: FlGridData(show: true),
+                borderData: FlBorderData(show: false),
               ),
             ),
           );
@@ -55,34 +66,27 @@ class StatisticsScreen extends StatelessWidget {
     );
   }
 
-  List<charts.Series<ChartData, String>> _createChartData(List<Entry> entries) {
-    // Convert entries to ChartData
-    final combinedEntries = entries
-        .map((entry) => ChartData(entry.id.toString(), entry.amount,
-            entry.isIncome ? Colors.green : Colors.red))
-        .toList();
+  List<BarChartGroupData> _createChartData(List<Entry> entries) {
+    final incomeData = entries.where((entry) => entry.isIncome).toList();
+    final expenseData = entries.where((entry) => !entry.isIncome).toList();
 
-    // Sort entries by the order they were added (assumed to be by 'id')
-    combinedEntries.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
+    List<BarChartGroupData> barGroups = [];
 
-    return [
-      charts.Series<ChartData, String>(
-        id: 'Income & Expenses',
-        colorFn: (ChartData data, _) =>
-            charts.ColorUtil.fromDartColor(data.color),
-        domainFn: (ChartData data, _) =>
-            data.id, // Use the ID or another unique identifier
-        measureFn: (ChartData data, _) => data.amount,
-        data: combinedEntries,
-      ),
-    ];
+    for (var i = 0; i < entries.length; i++) {
+      final entry = entries[i];
+      final barData = BarChartRodData(
+        toY: entry.amount,
+        color: entry.isIncome ? Colors.green : Colors.red,
+        width: 20,
+      );
+
+      barGroups.add(BarChartGroupData(
+        x: i,
+        barRods: [barData],
+        showingTooltipIndicators: [0],
+      ));
+    }
+
+    return barGroups;
   }
-}
-
-class ChartData {
-  final String id; // Use the ID or another unique identifier
-  final double amount;
-  final Color color;
-
-  ChartData(this.id, this.amount, this.color);
 }

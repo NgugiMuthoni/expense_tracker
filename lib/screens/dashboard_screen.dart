@@ -1,3 +1,5 @@
+import 'package:expense_tracker/screens/expenses_sreen.dart';
+import 'package:expense_tracker/screens/income_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -179,6 +181,34 @@ class DashboardScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => AddEntryScreen(user: user),
+                ),
+              );
+            },
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.attach_money_rounded),
+            label: 'Incomes',
+            backgroundColor: Colors.green,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      IncomesScreen(user: user), // Navigate to Incomes Screen
+                ),
+              );
+            },
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.money_off_csred_rounded),
+            label: 'Expenses',
+            backgroundColor: Colors.red,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ExpensesScreen(user: user), // Navigate to Expenses Screen
                 ),
               );
             },
