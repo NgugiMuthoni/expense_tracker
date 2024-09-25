@@ -15,7 +15,7 @@ class AccountScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Profile Details', style: TextStyle(fontSize: 24)),
-            // Add profile and password change widgets here
+            
           ],
         ),
       ),

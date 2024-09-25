@@ -18,7 +18,7 @@ class ExpensesScreen extends StatelessWidget {
         title: const Text('Expenses'),
       ),
       body: FutureBuilder<List<Entry>>(
-        future: dbService.getEntries(user.id!), // Fetch all entries for the user
+        future: dbService.getEntries(user.id!), 
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -50,7 +50,7 @@ class ExpensesScreen extends StatelessWidget {
                     color: Colors.red,
                     onPressed: () async {
                       await dbService.deleteEntry(entry.id!);
-                      // Refresh the screen after deletion
+                      
                     },
                   ),
                 ),

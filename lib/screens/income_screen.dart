@@ -18,7 +18,7 @@ class IncomesScreen extends StatelessWidget {
         title: const Text('Incomes'),
       ),
       body: FutureBuilder<List<Entry>>(
-        future: dbService.getEntries(user.id!), // Fetch all entries for the user
+        future: dbService.getEntries(user.id!), 
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -28,7 +28,7 @@ class IncomesScreen extends StatelessWidget {
             return const Center(child: Text('No incomes found.'));
           }
 
-          final incomes = snapshot.data!.where((entry) => entry.isIncome).toList(); // Filter incomes
+          final incomes = snapshot.data!.where((entry) => entry.isIncome).toList(); 
 
           return ListView.builder(
             itemCount: incomes.length,
@@ -50,7 +50,7 @@ class IncomesScreen extends StatelessWidget {
                     color: Colors.red,
                     onPressed: () async {
                       await dbService.deleteEntry(entry.id!);
-                      // Refresh the screen after deletion
+
                     },
                   ),
                 ),

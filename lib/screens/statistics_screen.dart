@@ -10,8 +10,7 @@ class StatisticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dbService = Provider.of<DBService>(context);
-    const int userId = 1; // Default userId for testing
-
+    const int userId = 1; 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Statistics'),
@@ -31,7 +30,7 @@ class StatisticsScreen extends StatelessWidget {
           final data = _createChartData(entries);
 
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(17.0),
             child: BarChart(
               BarChartData(
                 barGroups: data,
@@ -45,18 +44,18 @@ class StatisticsScreen extends StatelessWidget {
                         return Text(
                           index >= entries.length ? '' : entries[index].date,
                           style: const TextStyle(
-                            fontSize: 10,
+                            fontSize: 6,
                             color: Colors.black,
                           ),
                         );
                       },
                     ),
                   ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: true),
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
-                gridData: FlGridData(show: true),
+                gridData: const FlGridData(show: true),
                 borderData: FlBorderData(show: false),
               ),
             ),
@@ -67,8 +66,8 @@ class StatisticsScreen extends StatelessWidget {
   }
 
   List<BarChartGroupData> _createChartData(List<Entry> entries) {
-    final incomeData = entries.where((entry) => entry.isIncome).toList();
-    final expenseData = entries.where((entry) => !entry.isIncome).toList();
+    entries.where((entry) => entry.isIncome).toList();
+    entries.where((entry) => !entry.isIncome).toList();
 
     List<BarChartGroupData> barGroups = [];
 
@@ -76,8 +75,8 @@ class StatisticsScreen extends StatelessWidget {
       final entry = entries[i];
       final barData = BarChartRodData(
         toY: entry.amount,
-        color: entry.isIncome ? Colors.green : Colors.red,
-        width: 20,
+        color: entry.isIncome ? Colors.green.shade300 : Colors.red.shade300,
+        width: 10,
       );
 
       barGroups.add(BarChartGroupData(

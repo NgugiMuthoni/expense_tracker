@@ -21,7 +21,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
 
   void _submit() async {
     if (_titleController.text.isEmpty || _amountController.text.isEmpty) {
-      return; // Handle empty fields
+      return; 
     }
 
     final title = _titleController.text;

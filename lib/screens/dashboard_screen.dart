@@ -1,5 +1,6 @@
 import 'package:expense_tracker/screens/expenses_sreen.dart';
 import 'package:expense_tracker/screens/income_screen.dart';
+import 'package:expense_tracker/screens/metrics_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -7,7 +8,7 @@ import '../services/db_service.dart';
 import '../models/user_model.dart';
 import '../models/entry_models.dart';
 import 'add_entry_screen.dart';
-import 'statistics_screen.dart'; // Import your statistics screen
+import 'statistics_screen.dart'; 
 
 class DashboardScreen extends StatelessWidget {
   final User user;
@@ -24,7 +25,7 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // FutureBuilder to get total income, expenses, and savings
+          
           FutureBuilder<Map<String, double>>(
             future: _getTotals(dbService),
             builder: (context, snapshot) {
@@ -50,7 +51,7 @@ class DashboardScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    // First Row: Savings
+                    
                     Container(
                       color: savingsColor,
                       padding: const EdgeInsets.all(16.0),
@@ -63,8 +64,7 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10), // Space between rows
-                    // Second Row: Income and Expenses
+                    const SizedBox(height: 10), 
                     Row(
                       children: [
                         Expanded(
@@ -141,7 +141,7 @@ class DashboardScreen extends StatelessWidget {
                           color: Colors.red,
                           onPressed: () async {
                             await dbService.deleteEntry(entry.id!);
-                            // Refresh the screen after deletion
+                            
                           },
                         ),
                       ),
@@ -194,7 +194,7 @@ class DashboardScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      IncomesScreen(user: user), // Navigate to Incomes Screen
+                      IncomesScreen(user: user), 
                 ),
               );
             },
@@ -208,7 +208,21 @@ class DashboardScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      ExpensesScreen(user: user), // Navigate to Expenses Screen
+                      ExpensesScreen(user: user), 
+                ),
+              );
+            },
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.bar_chart),
+            label: 'Report',
+            backgroundColor: Colors.purple,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ReportScreen(user: user), 
                 ),
               );
             },

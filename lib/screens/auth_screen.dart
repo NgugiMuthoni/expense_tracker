@@ -108,8 +108,8 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   String hashPassword(String password) {
-    var bytes = utf8.encode(password); // Convert password to bytes
-    var digest = sha256.convert(bytes); // Hash using SHA-256
-    return digest.toString(); // Return hashed password as a string
+    var bytes = utf8.encode(password); 
+    var digest = sha256.convert(bytes); 
+    return digest.toString(); 
   }
 }
